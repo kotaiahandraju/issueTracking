@@ -62,8 +62,8 @@
 														<th class="nowrap width-13">AssignTo</th>
 														<th class="nowrap width-13">Attachment</th>
 														<th class="nowrap width-13">Summary</th>
-														<th class="nowrap width-13">UpdatedTime</th>
 														<th class="nowrap width-13">CreatedTime</th>
+														<th class="nowrap width-13">UpdatedTime</th>
 														<th class="nowrap width-13"></th>
 													</tr>
 													<c:forEach var="issue" items="${allReportIssues}">
