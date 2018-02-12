@@ -7,7 +7,7 @@
 	<div class="clearfix"></div>
 	<ol class="breadcrumb">
 		<li><a href="#">Home</a></li>
-		<li>Organization Master</li>
+		<li>Department Master</li>
 	</ol>
 	<div class="clearfix"></div>
 	<div class="container">
@@ -15,7 +15,7 @@
 			<div class="col-md-12">
 				<div class="panel panel-primary">
 					<div class="panel-heading">
-						<h4>Organization List</h4>
+						<h4>Department List</h4>
 						<div class="options">
 							<a href="javascript:;" class="panel-collapse"><i class="fa fa-chevron-down"></i></a>
 						</div>
@@ -24,7 +24,7 @@
 					<input type="checkbox" class="form-check-input" onclick="inactiveData();" id="inActive"> <label class="form-check-label">Show Inactive List</label>
 						<div class="table-responsive" id="tableId">
 							<table cellpadding="0" cellspacing="0" border="0" class="table table-striped table-bordered datatables" id="example">
-								<thead><tr><th>Org ID</th><th>Name</th><th>Description</th><th>Status</th><th></th></tr></thead>
+								<thead><tr><th>Dept ID</th><th>Name</th><th>Description</th><th>Status</th><th></th></tr></thead>
 								<tbody></tbody>
 							</table>
 						</div>
@@ -37,12 +37,12 @@
 			<div class="col-md-12 col-sm-12">
 				<div class="panel panel-primary">
 					<div class="panel-heading">
-						<h4>Add Organization</h4>
+						<h4>Add Department</h4>
 					</div>
-					<form:form class="form-horizontal" commandName="orgf" role="form" id="fillingstation-form" action="org" method="post">
+					<form:form class="form-horizontal" commandName="deptf" role="form" id="fillingstation-form" action="dept" method="post">
 					<div class="panel-body">
 						<div class="row">
-                    		<div class="col-md-6">
+                    		<div class="col-md-4">
                     			<div class="form-group">
                     				<form:hidden path="id"/>
 									<label for="focusedinput" class="col-md-6 control-label">Name <span class="impColor">*</span></label>
@@ -52,18 +52,29 @@
 								    </div>
                     			</div>
                     		</div>
-                    		<div class="col-md-6">
+                    		<div class="col-md-4">
+                    			<div class="form-group">
+									<label class="col-md-5 control-label no-padding-right">Department Head</label>
+									<div class="col-md-6">
+										<form:select path="depthead" class="form-control " >
+											<form:option value="">-- Select Department Head --</form:option>
+											<form:options items="${users}"/>
+										</form:select>
+									</div>
+								</div>
+                    		</div>
+                    		                    		
+                    		<div class="col-md-4">
                     			<div class="form-group">
 									<label for="focusedinput" class="col-md-6 control-label">Description <span class="impColor">*</span></label>
-									<div class="col-md-5">
+									<div class="col-md-6">
 										<form:textarea path="description" class="form-control validate" placeholder="Enter Description"/>	
 										<span class="hasError" id="stationnameError"></span>
+										
 								    </div>
                     			</div>
+                    		</div>         		
                     		</div>
-                    		
-                    		
-                    	</div>
                     		
 <!-- Modal Starts here-->
 <!-- Modal Ends here-->
@@ -110,19 +121,20 @@ if (listOrders1 != "") {
 function displayTable(listOrders) {
 	$('#tableId').html('');
 	var tableHead = '<table id="example" class="table table-striped table-bordered datatables">'
-			+ '<thead><tr><th>Name</th><th>Description</th><th style="text-align: center;"></th></tr></thead><tbody></tbody></table>';
+			+ '<thead><tr><th>Name</th><th>Department Head</th><th>Description</th><th style="text-align: center;"></th></tr></thead><tbody></tbody></table>';
 	$('#tableId').html(tableHead);
 	serviceUnitArray = {};
 	$.each(listOrders,function(i, orderObj) {
 		if(orderObj.status == "1"){
-			var deleterow = "<a class='deactivate' onclick='deleteorg("+ orderObj.id+ ",0)'><i class='fa fa-eye'></i></a>"
+			var deleterow = "<a class='deactivate' onclick='deletedept("+ orderObj.id+ ",0)'><i class='fa fa-eye'></i></a>"
 		}else{  
-			var deleterow = "<a class='activate' onclick='deleteorg("+ orderObj.id+ ",1)'><i class='fa fa-eye-slash'></i></a>"
+			var deleterow = "<a class='activate' onclick='deletedept("+ orderObj.id+ ",1)'><i class='fa fa-eye-slash'></i></a>"
 		}
 		var edit = "<a class='edit editIt' onclick='editCylinder("	+ orderObj.id+ ")'><i class='fa fa-edit'></i></a>"
 		serviceUnitArray[orderObj.id] = orderObj;
 		var tblRow = "<tr>"
 			+ "<td title='"+orderObj.name+"'>"+ orderObj.name + "</td>"
+			+ "<td title='"+orderObj.depthead+"'>"+ orderObj.depthead + "</td>"
 			+ "<td title='"+orderObj.description+"'>"+ orderObj.description + "</td>"
 			+ "<td style='text-align: center;white-space: nowrap;'>" + edit + "&nbsp;&nbsp;" + deleterow + "</td>" 
 			+ "</tr>";
@@ -137,11 +149,12 @@ function editCylinder(id) {
 	$("#id").val(serviceUnitArray[id].id);
 	$("#name").val(serviceUnitArray[id].name);
 	$("#description").val(serviceUnitArray[id].description);
+	$("#depthead").val(serviceUnitArray[id].deptheadid);
 	$("#submit1").val("Update");
 	$(window).scrollTop($('#moveTo').offset().top);
 }
 
-function deleteorg(id,status){
+function deletedept(id,status){
 	var checkstr=null;
 	if(status == 0){
 		 checkstr = confirm('Are you sure you want to Deactivate?');
@@ -152,7 +165,7 @@ function deleteorg(id,status){
 		var formData = new FormData();
 	    formData.append('id', id);
 	    formData.append('status', status);
-		$.fn.makeMultipartRequest('POST', 'deleteOrg', false, formData, false, 'text', function(data){
+		$.fn.makeMultipartRequest('POST', 'deleteDept', false, formData, false, 'text', function(data){
 			var jsonobj = $.parseJSON(data);
 			window.location.reload();
 			var alldata = jsonobj.allOrders1;
@@ -201,6 +214,6 @@ function inactiveData() {
 				});
 		
 }
-$("#pageName").text("Organization Master");
-$(".org").addClass("active"); 
+$("#pageName").text("Department Master");
+$(".dept").addClass("active"); 
 </script>

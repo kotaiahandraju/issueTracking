@@ -4,68 +4,37 @@
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/sql" prefix="sql"%>
 
-<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.9.0/moment-with-locales.js"></script>
-<script type="text/javascript" src="https://cdn.rawgit.com/Eonasdan/bootstrap-datetimepicker/a549aa8780dbda16f6cff545aeabc3d71073911e/src/js/bootstrap-datetimepicker.js"></script>
-<link rel="stylesheet" type="text/css" href="https://cdn.rawgit.com/Eonasdan/bootstrap-datetimepicker/a549aa8780dbda16f6cff545aeabc3d71073911e/build/css/bootstrap-datetimepicker.css">
-<script type='text/javascript'>
-$(function () {
-
-	 $('#taskdeadline').datetimepicker({        
-
-	    useCurrent: false,
-	    format: 'DD-MMM-YYYY hh:mm A',
-	    showTodayButton: true,
-	    sideBySide: true,
-// 	    showClose: true,
-// 	    showClear: true,
-	    toolbarPlacement: 'top'
-
-	  });
-	});
-
-</script>
-
-
-
-
-
-
-
-
-
-
-
-
 	<div class="clearfix"></div>
 	<ol class="breadcrumb">
 		<li><a href="#">Home</a></li>
 		<li>Task Master</li>
 	</ol>
 	                       <div class="clearfix"></div><br>
-	                       <form>
+	                       <form:form commandName="taskf">
 	                        <div class="row">
                     		<div class="col-md-4">
                     			<div class="form-horizontal">
 									<label for="focusedinput" class="col-md-6 control-label" style="padding-top:2px;">Tasks Types <span class="impColor">*</span></label>
-									<select id="ttype"  class="col-xs-10 col-sm-5 " >
-											<c:forEach var="list" items="${tasksSelection}">
-											<option value=${list.key}>${list.value} </option>
-											</c:forEach>
+									<select name="ttype" id="ttype" class="col-xs-10 col-sm-5" onfocus="removeBorder(this.id)" >
+											<!-- <option value="0">Select</option> -->
+											<option value="1" >Assigned to</option>
+											<option value="2" >Assigned by</option>
+											<option value="3" >Monitored by</option>
+											<option value="4" >Resolved</option>
+											
 										</select>
                     			</div>
                     		</div>
                     		<div class="col-md-4">
                     			<div class="form-horizontal">
 									<label for="focusedinput" class="col-md-6 control-label" style="padding-top:2px;">Department  <span class="impColor">*</span></label>
-									<select id="deptid"  class="col-xs-10 col-sm-5 " >
-											<c:forEach var="list" items="${departmentNames}">
-											<option value=${list.key}>${list.value} </option>
-											</c:forEach>
-										</select>
+									<form:select path="additionalinfo" class="col-xs-10 col-sm-5 " onfocus="removeBorder(this.id)" >
+											<form:options items="${departmentNames}"/>
+										</form:select>
                     			</div>
                     		</div>
                     		</div>
-                    		</form>
+                    		</form:form>
 	
 	
 	<div class="clearfix"></div>
@@ -98,14 +67,14 @@ $(function () {
 					<div class="panel-heading">
 						<h4>Add Task</h4>
 					</div>
-					<form:form class="form-horizontal" modelAttribute="taskf"  action="savetask" method="post" enctype="multipart/form-data">
+					<form:form class="form-horizontal" commandName="taskf" role="form" id="fillingstation-form" action="task" method="post" enctype="multipart/form-data">
 					<div class="panel-body">
 						<div class="row">
                     		<div class="col-md-6">
                     			<div class="form-group">
                     				<form:hidden path="id"/>
 									<label for="focusedinput" class="col-md-6 control-label">Category  <span class="impColor">*</span></label>
-									<form:select path="category" class="col-xs-10 col-sm-5 validate1" onfocus="removeBorder(this.id)" >
+									<form:select path="category" class="col-xs-10 col-sm-5 validate" onfocus="removeBorder(this.id)" >
 											<form:option value="" label="--- Select ---" />
 											<form:options items="${category}"/>
 										</form:select>
@@ -115,7 +84,7 @@ $(function () {
                     			<div class="form-group">
 									<label for="focusedinput" class="col-md-6 control-label">Severity <span class="impColor">*</span></label>
 									
-										<form:select path="severity" class="col-xs-10 col-sm-5 validate1" onfocus="removeBorder(this.id)">
+										<form:select path="severity" class="col-xs-10 col-sm-5 validate" onfocus="removeBorder(this.id)">
 										<form:option value="" label="--- Select ---" />
 										 <form:options items="${severity}"/>
 										</form:select>	
@@ -130,7 +99,7 @@ $(function () {
                     		<div class="col-md-6">
                     			<div class="form-group">
 									<label for="focusedinput" class="col-md-6 control-label">Priority  <span class="impColor">*</span></label>
-									<form:select path="priority" class="col-xs-10 col-sm-5 validate1" >
+									<form:select path="priority" class="col-xs-10 col-sm-5 validate" >
 											<form:option value="" label="--- Select ---" />
 											<form:options items="${priority}"></form:options>
 										</form:select>
@@ -140,7 +109,7 @@ $(function () {
                     			<div class="form-group">
 									<label for="focusedinput" class="col-md-6 control-label">Assigned to <span class="impColor">*</span></label>
 									
-										<form:select path="assignto" class="col-xs-10 col-sm-5 validate1" onfocus="removeBorder(this.id)">
+										<form:select path="assignto" class="col-xs-10 col-sm-5 validate" onfocus="removeBorder(this.id)">
 											<form:option value="" label="--- Select ---" />
 										 	<form:options items="${userNames}"/>
 										</form:select>
@@ -155,14 +124,14 @@ $(function () {
                     		<div class="col-md-6">
                     			<div class="form-group">
 									<label for="focusedinput" class="col-md-6 control-label">Summary  <span class="impColor">*</span></label>
-									<form:input path="subject"  placeholder="Summary" class="col-xs-10 col-sm-5 validate1" />
+									<form:input path="subject"  placeholder="Summary" class="col-xs-10 col-sm-5 validate" />
                     			</div>
                     		</div>
                     		<div class="col-md-6">
                     			<div class="form-group">
 									<label for="focusedinput" class="col-md-6 control-label">Description <span class="impColor">*</span></label>
 									<div class="col-md-5">
-									<form:textarea path="description" class="form-control validate1" placeholder="Enter Description"/>
+									<form:textarea path="description" class="form-control validate" placeholder="Enter Description"/>
 									<span class="hasError" id="stationnameError"></span>
 								    </div>
                     			</div>
@@ -174,21 +143,11 @@ $(function () {
                     		<div class="form-group">
                     		<label class="ace-file-input ace-file-multiple col-sm-3 col-md-push-3 control-label no-padding-right" >Attach File(s)</label>
 									<div class="col-md-8">
-										<input type="file" name="file1" id="file1" class="col-sm-9 col-md-push-5" multiple="multiple" style="margin: 7px 0px 0px 0px;">
+										<input type="file" name="file" id="file" class="col-sm-9 col-md-push-5" multiple="multiple" style="margin: 7px 0px 0px 0px;">
 									</div>
                     		</div>
                     		</div>
-                    		<div class="col-md-6">
-                    			<div class="form-group">
-									<label for="focusedinput" class="col-md-6 control-label">Task DeadLine <span class="impColor">*</span></label>
-									<div class="col-md-6">
-								    	<form:input path="taskdeadline" value="" class="form-control validate "  placeholder="Task deadLine" />
-								    </div>
-                    			</div>
                     		</div>
-                    		</div>
-                    		
-                    		<div id="getting-started"></div>
                     		
 <!-- Modal Ends here-->
 
@@ -197,7 +156,7 @@ $(function () {
 				      	<div class="row">
 				      		<div class="col-sm-12">
 				      			<div class="btn-toolbar text-center">
-					      			<input type="submit" id="submitMainForm"  value="Submit" class="btn-primary btn"/>
+					      			<input type="submit" id="submit1" value="Submit" class="btn-primary btn"/>
 					      			<input type="reset" value="Reset" class="btn-danger btn cancel"/>
 				      			</div>
 				      		</div>
@@ -243,7 +202,7 @@ $(function () {
 			
 			<!-- form model start here or add comment  -->
 			
-			
+<%-- 			
 <!-- Modal Starts here-->
 <div class="modal fade" id="formModal" data-backdrop="static" data-keyboard="false" role="dialog">
 	<div class="modal-dialog">
@@ -254,21 +213,21 @@ $(function () {
 				<h4 class="modal-title" style="color: white;"> Add Comment </h4>
         	</div>
         	<div class="modal-body">
-					<form class="form-horizontal">
+					<form:form class="form-horizontal" commandName="subTaskf"  method="post" enctype="multipart/form-data">
 					<div class="panel-body">
 						<div class="row">
                     		<div class="col-md-5">
                     			<div class="form-group">
-                    				<!-- <input type=hidden path="id"/> -->
+                    				<form:hidden path="id"/>
                     				
-                    				<input type=hidden name="issueid" id="issueid" value="">
+                    				<form:hidden path="issueid"/>
                     				
 									<label for="focusedinput" class="col-md-6 control-label">Status  <span class="impColor">*</span></label>
-										<select  name="kpstatus" id="kpstatus" class="col-xs-10 col-sm-5  validate2 " >
-											<c:forEach var="list" items="${kpstatuses}">
-											<option value=${list.key}>${list.value} </option>
-											</c:forEach>
-										</select>
+									<form:select path="kpstatus" class="col-xs-10 col-sm-5 validateCmt" onfocus="removeBorder(this.id)" style="margin: 6px 0px 0px 0px;
+    width: 50%;" >
+											<form:option value="" label="--- Select ---" />
+											<form:options items="${kpstatuses}"/>
+										</form:select>
                     			</div>
                     		</div>
                     		<div class="col-md-6">
@@ -286,7 +245,7 @@ $(function () {
                     			<div class="form-group">
 									<label for="focusedinput" class="col-md-6 control-label">Comment <span class="impColor">*</span></label>
 									<div class="col-md-6">
-									<input type="text"  name="commet" id="commet"  onkeyup="removeBorder(this.id)" class="form-control validate2" placeholder="Enter commit" style="width: 320px;">
+									<form:textarea path="comment" class="form-control validateCmt" placeholder="Enter commit" style="width: 320px;"/>
 									<span class="hasError" id="stationnameError"></span>
 								    </div>
                     			</div>
@@ -299,7 +258,7 @@ $(function () {
 				      	<div class="row">
 				      		<div class="col-sm-12">
 				      			<div class="btn-toolbar text-center">
-					      			<input type="button" id="modelSubmit" value="Submit"  onclick="submitCommet()" class="btn-primary btn"/>
+					      			<input type="button" id="submit2" value="Submit"  onclick="submitCommet()" class="btn-primary btn"/>
 					      			<input type="reset" value="Reset" class="btn-danger btn cancel"/>
 				      			</div>
 				      		</div>
@@ -307,7 +266,7 @@ $(function () {
 			      	</div>
                     		</div>
                     		
-                    		
+                    		</form:form>
                     		
 				</div> <!-- body -->
 					
@@ -320,65 +279,18 @@ $(function () {
       	</div> <!--  model close here-->
 <!-- Modal Ends here-->
 			<!-- container -->
-
-
-<!--  Count Down timer model-->
-<div class="modal fade" id="timeModal" data-backdrop="static"
-	data-keyboard="false" role="dialog">
-	<div class="modal-dialog">
-		<!-- Modal content-->
-		<div class="modal-content">
-			<div class="modal-header" style="background: #2973cf;">
-				<button type="button" class="close" data-dismiss="modal">&times;</button>
-				<h4 class="modal-title" style="color: white;">Task Count Down</h4>
-			</div>
-			<div> </div>	<div class="modal-body">
-			<p id="demo"></p>
+ --%>			
 			
-			</div>
-			<!-- model body -->
-		</div>
-		<!-- model content -->
-	</div></div>
-	<!--  model content-->
-<!--  model classs-->
-
-
+			
+			
+			
 
 
 </body>
-<!-- <script>
-// Set the date we're counting down to
-var countDownDate = new Date("Sep 5,2019 15:37:25").getTime();
-
-// Update the count down every 1 second
-var x = setInterval(function() {
-
-    // Get todays date and time
-    var now = new Date().getTime();
-    
-    // Find the distance between now an the count down date
-    var distance = countDownDate - now;
-    
-    // Time calculations for days, hours, minutes and seconds
-    var days = Math.floor(distance / (1000 * 60 * 60 * 24));
-    var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-    var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-    var seconds = Math.floor((distance % (1000 * 60)) / 1000);
-    // Output the result in an element with id="demo"
-    document.getElementById("demo").innerHTML = days + "d " + hours + "h "
-    + minutes + "m " + seconds + "s ";
-    
-    // If the count down is over, write some text 
-    if (distance < 0) {
-        clearInterval(x);
-        document.getElementById("demo").innerHTML = "EXPIRED";
-    }
-}, 1000);
+<%-- <script type='text/javascript' src='${baseurl }/js/custemValidation.js'></script>  --%>
+<script>
 </script>
- -->
 <script type="text/javascript">
-var loginUserId =${cacheUserBean.id};
 var listOrders1 = ${allOrders1};
 if (listOrders1 != "") {
 	displayTable(listOrders1)
@@ -387,34 +299,19 @@ if (listOrders1 != "") {
 function displayTable(listOrders) {
 	$('#tableId').html('');
 	var tableHead = '<table id="example" class="table table-striped table-bordered datatables">'
-			+ '<thead><tr><th>Task No</th><th>Summary</th><th>Category</th><th>priority</th><th>Assigned</th><th>Created Time</th><th style="text-align: center;"></th></tr></thead><tbody></tbody></table>';
+			+ '<thead><tr><th>TaskNo</th><th>Summary</th><th>Category</th><th>priority</th><th>Assigned</th><th>UpdatedTime</th><th style="text-align: center;"></th></tr></thead><tbody></tbody></table>';
 	$('#tableId').html(tableHead);
 	serviceUnitArray = {};
-	
 	$.each(listOrders,function(i, orderObj) {
-		if(loginUserId == "1")
-			{
 		if(orderObj.status == "1"){
 			var deleterow = "<a class='deactivate' onclick='deletetask("+ orderObj.id+ ",0)'><i class='fa fa-eye'></i></a>"
 		}else{  
 			var deleterow = "<a class='activate' onclick='deletetask("+ orderObj.id+ ",1)'><i class='fa fa-eye-slash'></i></a>"
 		}
-		
-		var edit = "<a class='edit editIt' onclick='editTask("	+ orderObj.id+ ")'><i class='fa fa-edit'></i></a>"
-		
-			}
-		else
-		{
-			edit ="";
-			deleterow ="";
-		}
-		
-		
-		
-		
+		var edit = "<a class='edit editIt' onclick='editCylinder("	+ orderObj.id+ ")'><i class='fa fa-edit'></i></a>"
 		var view = "<a class='view viewIt' onclick='viewTask("	+ orderObj.id+ ")'>"+ orderObj.taskno+ "</a>"
 		var comment = "<a class='view viewIt' onclick='addComment("	+ orderObj.id+ ")'>   <i class='fa fa-comments'></i></a>"
-		var time = "<a class='view viewIt' onclick='showdeadline("	+ orderObj.id+ ")'> <i class='fa fa-hourglass-half'></i> </a>"
+		var time = "<a class='view viewIt' onclick='showdeadline()'> <i class='fa fa-hourglass-half'></i> </a>"
 		serviceUnitArray[orderObj.id] = orderObj;
 		var tblRow = "<tr>"
 			+ "<td title='"+orderObj.taskno+"'>"+ view + "</td>"
@@ -422,7 +319,7 @@ function displayTable(listOrders) {
 			+ "<td title='"+orderObj.category+"'>"+ orderObj.category + "</td>"
 			+ "<td title='"+orderObj.priority+"'>"+ orderObj.priority + "</td>"
 			+ "<td title='"+orderObj.assignto+"'>"+ orderObj.assignto + "</td>"
-			+ "<td title='"+orderObj.createdTime+"'>"+ orderObj.createdTime + "</td>"
+			+ "<td title='"+orderObj.updatedTime+"'>"+ orderObj.updatedTime + "</td>"
 			+ "<td style='text-align: center;white-space: nowrap;'>" + edit + "&nbsp;&nbsp;" + deleterow + "&nbsp;&nbsp;" + comment + "&nbsp;&nbsp;" + time + "</td>" 
 			+ "</tr>";
 		$(tblRow).appendTo("#tableId table tbody");
@@ -432,7 +329,7 @@ function displayTable(listOrders) {
 }
 
 
-function editTask(id) {
+function editCylinder(id) {
 	$("#id").val(serviceUnitArray[id].id);
 	$("#subject").val(serviceUnitArray[id].subject);
 	$("#category").val(serviceUnitArray[id].categoryid);
@@ -441,12 +338,11 @@ function editTask(id) {
 	$("#assignto").val(serviceUnitArray[id].assigntoid);
 	$("#uploadfile").val(serviceUnitArray[id].uploadfile);
 	$("#description").val(serviceUnitArray[id].description);
-	$("#taskdeadline").val(serviceUnitArray[id].taskdeadline);
 	$("#submit1").val("Update");
 	$(window).scrollTop($('#moveTo').offset().top);
 }
 
-/* view task history */
+
 
 function viewTask(id){
 		var formData = new FormData();
@@ -458,6 +354,7 @@ function viewTask(id){
 			var tableHead = '<table id="example" class="table table-striped table-bordered datatables">'
 				+ '<thead><tr><th>Date Modified</th><th>User Name</th><th>Status</th><th>Attachment</th><th>Comment</th></tr></thead><tbody></tbody></table>';
 		$('#HtableId').html(tableHead);
+		console.log(alldata);
 		$.each(alldata,function(i, orderObj) {
 			if(orderObj.uploadfiles==undefined) orderObj.uploadfiles='';
 			else
@@ -498,73 +395,117 @@ function addComment(id){
 	
 }
 
-var countDownDate;
 
-function showdeadline(id){
-	
-	countDownDate=serviceUnitArray[id].taskdeadline
-	
-	  var count = new Date(countDownDate).getTime();
-	
+/*  view task history here */
 
-	// Update the count down every 1 second
-	var x = setInterval(function() {
+function addComments(id){
+	var formData = new FormData();
+    formData.append('id', id);
+	$.fn.makeMultipartRequest('POST', 'addcomment', false, formData, false, 'text', function(data){
+		var jsonobj = $.parseJSON(data);
+		var alldata = jsonobj.list;
+		$('#HtableId').html('');
+		var tableHead = '<table id="example" class="table table-striped table-bordered datatables">'
+			+ '<thead><tr><th>Date Modified</th><th>User Name</th><th>Attachment</th><th>Change1</th></tr></thead><tbody></tbody></table>';
+	$('#HtableId').html(tableHead);
+	console.log(alldata);
+	$.each(alldata,function(i, orderObj) {
+		if(orderObj.uploadfiles==undefined) orderObj.uploadfiles='';
+		else
+			{
+				var list=orderObj.uploadfiles.split('*');
+				var uploadfiles='';
+				for(var i=0;i<list.length;i++)
+				{
+					uploadfiles=uploadfiles+'<a href="reportDocuments/'+list[i]+'" target="_blank" title="'+list[i]+'"><i class="fa fa-paperclip fa-lg grey"></i></a>';
+				}
+				orderObj.uploadfiles=uploadfiles;
+			}
+		var tblRow = "<tr>"
+			+ "<td title='"+orderObj.statustime+"'>"+ orderObj.statustime + "</td>"
+			+ "<td title='"+orderObj.issueid+"'>"+ orderObj.issueid + "</td>"
+			+ "<td title='"+orderObj.uploadfiles+"'>"+ orderObj.uploadfiles + "</td>"
+			+ "<td title='"+orderObj.description+"'>"+ orderObj.description + "</td>"
+			+ "</tr>";
+		$(tblRow).appendTo("#HtableId table tbody");
+		
+	});
+		$("#myModal").modal();
+	});
 
-	    // Get todays date and time
-	    var now = new Date().getTime();
-	    
-	    // Find the distance between now an the count down date
-	    var distance = count - now;
-	    
-	    // Time calculations for days, hours, minutes and seconds
-	    var days = Math.floor(distance / (1000 * 60 * 60 * 24));
-	    var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-	    var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-	    var seconds = Math.floor((distance % (1000 * 60)) / 1000);
-	    // Output the result in an element with id="demo"
-	    document.getElementById("demo").innerHTML = days + "d " + hours + "h "
-	    + minutes + "m " + seconds + "s ";
-	    
-	    // If the count down is over, write some text 
-	    if (distance < 0) {
-	        clearInterval(x);
-	        document.getElementById("demo").innerHTML = "EXPIRED";
-	    }
-	}, 1000);
-	
-	$("#timeModal").modal();
-	
-	
-	
+
 }
 
+/* display datatable by  user selection    */
+
+function Go(){
+	var dept1=$('#additionalinfo').val();
+	var ttype=$('#ttype').val();
+	
+	alert("dept"+dept1);
+	alert("ttype"+ttype);
+	
+	var formData = new FormData();
+	    formData.append('ttypeid', ttype);
+	    formData.append('deptid', dept1);
+	
+	$.fn.makeMultipartRequest('POST', 'setdata', false, formData, false, 'text', function(data){
+		var jsonobj = $.parseJSON(data);
+		var alldata = jsonobj.list;
+		console.log(alldata);
+			displayTable(alldata)
+	
+	 
+	 
+	 });
+}
+
+
+	
+	
+	
 	
 $('#ttype').on('change', function() {
 	  var ttype=$('#ttype').val();
+	  
+	  if($('#ttype').val()!='0')
+	  {
+		 
+		  
 	  var formData = new FormData();
 	    formData.append('ttypeid', ttype);
 	$.fn.makeMultipartRequest('POST', 'setdata', false, formData, false, 'text', function(data){
 		var jsonobj = $.parseJSON(data);
 		var alldata = jsonobj.list;
-			displayTable(alldata);
+		console.log(alldata);
+			displayTable(alldata)
+	
+	 
+	 
 	 });
-	  
-	  
+	  }
+	  else
+		  {
+		  alert("to be implemented");
+		  }
 	  
 	})
 	
 	
 	
 	
-	$("#deptid").on('change', function() {
-		 var dept=$('#deptid').val();
+	$('#additionalinfo').on('change', function() {
+		
+		 var dept=$('#additionalinfo').val();
+		 
 		 var formData = new FormData();
 		    formData.append('deptid', dept);
 		$.fn.makeMultipartRequest('POST', 'setdataDeptWise', false, formData, false, 'text', function(data){
 			var jsonobj = $.parseJSON(data);
 			var alldata = jsonobj.allOrders1;
+			console.log(alldata);
 			var myJSON = JSON.stringify(alldata);
-				displayTable(alldata);
+				displayTable(alldata)
 		
 		 
 		 
@@ -576,43 +517,15 @@ $('#ttype').on('change', function() {
 	
 	function submitCommet()
 	{
-	var idArrayCmt11 = $.makeArray($('.validate2').map(function() {
-		return this.id;
-		}));
-	validation = true;
-	$.each(idArrayCmt11, function(i, val) {
-		var value = $("#" + idArrayCmt11[i]).val();
-		var placeholder = $("#" + idArrayCmt11[i]).attr('placeholder');
-		if (value == null || value == "" || value == "undefined") {
-			$('style').append(styleBlock);
-			$("#" + idArrayCmt11[i] ).attr("placeholder", placeholder);
-			$("#" + idArrayCmt11[i] ).css('border-color','#e73d4a');
-			$("#" + idArrayCmt11[i] ).css('color','#e73d4a');
-			$("#" + idArrayCmt11[i] ).addClass('placeholder-style your-class');
-			 var id11 = $("#" + idArrayCmt11[i]+"_chosen").length;
-			if ($("#" + idArrayCmt11[i]+"_chosen").length)
-			{
-				$("#" + idArrayCmt11[i]+"_chosen").children('a').css('border-color','#e73d4a');
-			}
-//			$("#" + idArray[i] + "Error").text("Please " + placeholder);
-			validation = false;
-		} 
-	});
-	if(validation) {
-		
-	}else {
-		return false;
-	}
 			var kpstatus=$('#kpstatus').val();
-		    var commet=$('#commet').val();
+		    var comment=$('#comment').val();
 		    var issueid=$('#issueid').val();
 			   
 			   var formData = new FormData();
 			   
-			   formData.append('commet', commet);
+			   formData.append('comment', comment);
 			   formData.append('kpstatus', kpstatus);
 			   formData.append('issueid', issueid);
-			   
 			   
 			   
 	    	var ins = document.getElementById('fileupload').files.length;
@@ -622,7 +535,9 @@ $('#ttype').on('change', function() {
 	    	var portfolio_values = document.getElementById('fileupload').files[i];
 			formData.append('file[]', portfolio_values);
 			}
+	    	console.log("files data"+portfolio_values);
 	    	
+	    	console.log(formData);
 	    	
 	 		$.ajax({
 				type:"post",
@@ -633,14 +548,11 @@ $('#ttype').on('change', function() {
 				contentType: false,  // tell jQuery not to set contentType
 			  	
 			  	success: function(result){
-			  		if(result !="" && result != null){
-			  			
-			  		alert(result)
-			  		}
 			  		$('#kpstatus').val("");
-			  		$('#commet').val("");
+			  		$('#comment').val("");
 			  		$('#fileupload').val("");
-			  		 $('#formModal').modal('toggle');
+			  		$('#submit2').hide();
+			  		alert("comment inserted successfully");
 			  	
 			    },
 			    error: function (e) {
@@ -676,41 +588,33 @@ function deletetask(id,status){
 			var jsonobj = $.parseJSON(data);
 			window.location.reload();
 			var alldata = jsonobj.allOrders1;
+			console.log(jsonobj.allOrders1);
 			displayTable(alldata);
 		});
 	}
 }
 
-
-$('#kpstatus').on('change',function() {
-	var issueCreatedBY =$('#ttype').val();
-	var loginid=${cacheUserBean.id};
-	if($('#kpstatus').val()=='1')
-		{
-		
-	if( issueCreatedBY!= "2")
-		{
-		
-		alert("you are not authorized to close ticket");
-		$('#kstatus').css('border-color', 'red');
-		$('#kstatus').val("");
-		$('modelSubmit').prop('disabled',true)
-		}
-	else
-		{
-		
-		$('modelSubmit').prop('disabled',false)
-		}
+function validate(id, errorMessage)
+{
+	var styleBlock = '.placeholder-style.placeholder-style::-moz-placeholder {color: #cc0000;} .placeholder-style::-webkit-input-placeholder {color: #cc0000;}';
+	if($('#'+id).val() ==  null || $('#'+id).val() == ""  || $('#'+id).val()=="undefined" ) {
+		$('style').append(styleBlock);
+		$('#'+id).css('border-color','#cc0000');
+		$('#'+id).css('color','#cc0000');
+		$('#'+id).attr('placeholder',errorMessage);
+		$('#'+id).addClass('placeholder-style your-class');
+//			$('#'+id).css('color','#cc0000');
+//			$('#'+id+'Error').text(errorMessage);
+	}else{
+		$('#'+id).css('border-color','');
+		$('#'+id).removeClass('placeholder-style your-class');
+//			$('#'+id).css('color','');
+//			$('#'+id+'Error').text("");
+	}
 	
-		}
-});
+}
 
-
-
-
- 
-
-/* function inactiveData() {
+function inactiveData() {
 	var status="0";
 	if($('#inActive').is(":checked") == true){
 		status="0";
@@ -728,48 +632,7 @@ $('#kpstatus').on('change',function() {
 			console.log(jsonobj.allOrders1);
 				});
 		
-} */
-
-// main form validation
-
-var idArrayCmt1 = $.makeArray($('.validate1').map(function() {
-	return this.id;
-}));
-$('#submitMainForm').click(function(event) {
-	validation = true;
-	$.each(idArrayCmt1, function(i, val) {
-		var value = $("#" + idArrayCmt1[i]).val();
-		var placeholder = $("#" + idArrayCmt1[i]).attr('placeholder');
-		if (value == null || value == "" || value == "undefined") {
-			$('style').append(styleBlock);
-			$("#" + idArrayCmt1[i] ).attr("placeholder", placeholder);
-			$("#" + idArrayCmt1[i] ).css('border-color','#e73d4a');
-			$("#" + idArrayCmt1[i] ).css('color','#e73d4a');
-			$("#" + idArrayCmt1[i] ).addClass('placeholder-style your-class');
-			 var id11 = $("#" + idArrayCmt1[i]+"_chosen").length;
-			if ($("#" + idArrayCmt1[i]+"_chosen").length)
-			{
-				$("#" + idArrayCmt1[i]+"_chosen").children('a').css('border-color','#e73d4a');
-			}
-//			$("#" + idArray[i] + "Error").text("Please " + placeholder);
-			validation = false;
-		} 
-	});
-	if(validation) {
-		$("#submitMainForm").attr("disabled",true);
-		$("#submitMainForm").val("Please wait...");
-		$("#taskf").submit();											
-		event.preventDefault();
-	}else {
-		return false;
-		event.preventDefault();
-	}
-});
-
-
-
-
-
+}
 $("#pageName").text("Task Master");
 $(".task").addClass("active"); 
 </script>

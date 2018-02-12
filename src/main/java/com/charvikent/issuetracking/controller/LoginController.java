@@ -54,10 +54,10 @@ public class LoginController {
 //		JSONObject obj = new JSONObject();
 //		String object1 = null;
 		try {
-			if (result.hasErrors()) {
+			/*if (result.hasErrors()) {
 				// model.addAttribute("newUser", userObj);
 				return "login";
-			}
+			}*/
 			lbean = userService.findWithName(admin.getName(),admin.getPassword());
 			if(lbean != null){
 				 session.setAttribute("cacheUserBean", lbean);

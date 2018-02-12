@@ -3,6 +3,7 @@ package com.charvikent.issuetracking.config;
 import java.util.Properties;
 
 import org.apache.velocity.app.VelocityEngine;
+import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.view.UrlBasedViewResolver;
@@ -50,6 +51,17 @@ public class TilesConfig {
 	    properties.setProperty("class.resource.loader.class", "org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader");
 	    VelocityEngine velocityEngine = new VelocityEngine(properties);
 	    return velocityEngine;
+	}
+	
+	
+	public FilterRegistrationBean myFilterBean() {
+	  final FilterRegistrationBean filterRegBean = new FilterRegistrationBean();
+	  filterRegBean.setFilter(new MyFilter());
+	  filterRegBean.addUrlPatterns("/jsp/*");
+	  filterRegBean.setEnabled(Boolean.TRUE);
+	  filterRegBean.setName("Meu Filter");
+	  filterRegBean.setAsyncSupported(Boolean.TRUE);
+	  return filterRegBean;
 	}
 	
 }

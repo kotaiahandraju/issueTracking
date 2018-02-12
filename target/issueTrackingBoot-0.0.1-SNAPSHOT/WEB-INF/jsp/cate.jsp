@@ -7,7 +7,7 @@
 	<div class="clearfix"></div>
 	<ol class="breadcrumb">
 		<li><a href="#">Home</a></li>
-		<li>designation Master</li>
+		<li>Category Master</li>
 	</ol>
 	<div class="clearfix"></div>
 	<div class="container">
@@ -15,7 +15,7 @@
 			<div class="col-md-12">
 				<div class="panel panel-primary">
 					<div class="panel-heading">
-						<h4>Designation List</h4>
+						<h4>Category List</h4>
 						<div class="options">
 							<a href="javascript:;" class="panel-collapse"><i class="fa fa-chevron-down"></i></a>
 						</div>
@@ -24,7 +24,7 @@
 					<input type="checkbox" class="form-check-input" onclick="inactiveData();" id="inActive"> <label class="form-check-label">Show Inactive List</label>
 						<div class="table-responsive" id="tableId">
 							<table cellpadding="0" cellspacing="0" border="0" class="table table-striped table-bordered datatables" id="example">
-								<thead><tr><th>Design ID</th><th>Name</th><th>Description</th><th>Status</th><th></th></tr></thead>
+								<thead><tr><th>Dept ID</th><th>Name</th><th>Description</th><th>Status</th><th></th></tr></thead>
 								<tbody></tbody>
 							</table>
 						</div>
@@ -37,21 +37,31 @@
 			<div class="col-md-12 col-sm-12">
 				<div class="panel panel-primary">
 					<div class="panel-heading">
-						<h4>Add Designation</h4>
+						<h4>Add Category</h4>
 					</div>
-					<form:form class="form-horizontal" commandName="designf" role="form" id="fillingstation-form" action="desig" method="post">
+					<form:form class="form-horizontal" commandName="catef" role="form" id="fillingstation-form" action="cate" method="post">
 					<div class="panel-body">
 						<div class="row">
                     		<div class="col-md-6">
                     			<div class="form-group">
                     				<form:hidden path="id"/>
-									<label for="focusedinput" class="col-md-6 control-label">Designation <span class="impColor">*</span></label>
+									<label for="focusedinput" class="col-md-6 control-label">Name <span class="impColor">*</span></label>
 									<div class="col-md-5">
-										<form:input path="name" class="form-control validate" placeholder="Enter Designation"/>	
+										<form:input path="category" class="form-control validate" placeholder="Enter Name"/>	
 										<span class="hasError" id="stationnameError"></span>
 								    </div>
                     			</div>
                     		</div>
+                    		<%-- <div class="col-md-6">
+                    			<div class="form-group">
+									<label for="focusedinput" class="col-md-6 control-label">Description <span class="impColor">*</span></label>
+									<div class="col-md-5">
+										<form:textarea path="description" class="form-control validate" placeholder="Enter Description"/>	
+										<span class="hasError" id="stationnameError"></span>
+								    </div>
+                    			</div>
+                    		</div> --%>
+                    		
                     		
                     	</div>
                     		
@@ -75,10 +85,12 @@
 		</div>
 	</div>
 			<!-- container -->
-<p id="demo"></p>
+
 
 </body>
-
+<%-- <script type='text/javascript' src='${baseurl }/js/custemValidation.js'></script>  --%>
+<script>
+</script>
 <script type="text/javascript">
 
 /* $(document).ready(function() {
@@ -103,14 +115,14 @@ function displayTable(listOrders) {
 	serviceUnitArray = {};
 	$.each(listOrders,function(i, orderObj) {
 		if(orderObj.status == "1"){
-			var deleterow = "<a class='deactivate' onclick='deletedesign("+ orderObj.id+ ",0)'><i class='fa fa-eye'></i></a>"
+			var deleterow = "<a class='deactivate' onclick='deletecate("+ orderObj.id+ ",0)'><i class='fa fa-eye'></i></a>"
 		}else{  
-			var deleterow = "<a class='activate' onclick='deletedesign("+ orderObj.id+ ",1)'><i class='fa fa-eye-slash'></i></a>"
+			var deleterow = "<a class='activate' onclick='deletecate("+ orderObj.id+ ",1)'><i class='fa fa-eye-slash'></i></a>"
 		}
 		var edit = "<a class='edit editIt' onclick='editCylinder("	+ orderObj.id+ ")'><i class='fa fa-edit'></i></a>"
 		serviceUnitArray[orderObj.id] = orderObj;
 		var tblRow = "<tr>"
-			+ "<td title='"+orderObj.name+"'>"+ orderObj.name + "</td>"
+			+ "<td title='"+orderObj.category+"'>"+ orderObj.category + "</td>"
 			+ "<td style='text-align: center;white-space: nowrap;'>" + edit + "&nbsp;&nbsp;" + deleterow + "</td>" 
 			+ "</tr>";
 		$(tblRow).appendTo("#tableId table tbody");
@@ -122,13 +134,13 @@ function displayTable(listOrders) {
 
 function editCylinder(id) {
 	$("#id").val(serviceUnitArray[id].id);
-	$("#name").val(serviceUnitArray[id].name);
-	$("#description").val(serviceUnitArray[id].description);
+	$("#category").val(serviceUnitArray[id].category);
+	$("#status").val(serviceUnitArray[id].status);
 	$("#submit1").val("Update");
 	$(window).scrollTop($('#moveTo').offset().top);
 }
 
-function deletedesign(id,status){
+function deletecate(id,status){
 	var checkstr=null;
 	if(status == 0){
 		 checkstr = confirm('Are you sure you want to Deactivate?');
@@ -139,7 +151,7 @@ function deletedesign(id,status){
 		var formData = new FormData();
 	    formData.append('id', id);
 	    formData.append('status', status);
-		$.fn.makeMultipartRequest('POST', 'deleteDesign', false, formData, false, 'text', function(data){
+		$.fn.makeMultipartRequest('POST', 'deleteCate', false, formData, false, 'text', function(data){
 			var jsonobj = $.parseJSON(data);
 			window.location.reload();
 			var alldata = jsonobj.allOrders1;
@@ -188,6 +200,6 @@ function inactiveData() {
 				});
 		
 }
-$("#pageName").text("Designation Master");
-$(".desig").addClass("active"); 
+$("#pageName").text("Category Master");
+$(".cate").addClass("active"); 
 </script>
